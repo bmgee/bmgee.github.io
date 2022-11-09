@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Increasing Linux VPS RAM for Free Using ZRAM - rc script | Code Apex</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Increasing Linux VPS RAM for Free Using ZRAM - rc script" />
+<meta name="author" content="Code Apex" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Situation:" />
+<meta property="og:description" content="Situation:" />
+<link rel="canonical" href="http://localhost:4000/increasing-linux-vps-ram-for-free-zram-rcscript/" />
+<meta property="og:url" content="http://localhost:4000/increasing-linux-vps-ram-for-free-zram-rcscript/" />
+<meta property="og:site_name" content="Code Apex" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2014-07-31T11:03:29-07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Increasing Linux VPS RAM for Free Using ZRAM - rc script" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Code Apex"},"dateModified":"2014-07-31T11:03:29-07:00","datePublished":"2014-07-31T11:03:29-07:00","description":"Situation:","headline":"Increasing Linux VPS RAM for Free Using ZRAM - rc script","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/increasing-linux-vps-ram-for-free-zram-rcscript/"},"url":"http://localhost:4000/increasing-linux-vps-ram-for-free-zram-rcscript/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Code Apex" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Code Apex</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/affiliate-disclosure.html">Affiliate Disclosure</a><a class="page-link" href="/disclosure-policy.html">Disclosure Policy</a><a class="page-link" href="/medical-disclaimer.html">Medical Disclaimer</a><a class="page-link" href="/privacy-policy.html">Privacy Policy</a><a class="page-link" href="/terms-and-conditions.html">Terms and Conditions</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Increasing Linux VPS RAM for Free Using ZRAM - rc script</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2014-07-31T11:03:29-07:00" itemprop="datePublished">Jul 31, 2014
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">Code Apex</span></span></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="situation">Situation:</h2>
+
+<p>You are reaching or exceeding the RAM limits of your Linux VPS.</p>
+
+<h2 id="objective">Objective:</h2>
+
+<p>An increase in the amount of non-virtualized memory available to your applications on your VPS without resorting to paying for an upgraded VPS.</p>
+
+<h2 id="plan--execution">Plan + Execution:</h2>
+
+<p>Note we want an increase in the amount of fast physical memory available to our applications. Increasing virtualized memory (via an increase in swap partition or swap file sizes) would not meet our objective; though if your VPS is on SSDs then upping swap space may not be a bad option since solid state disks are substantially faster than traditional hard disks (but still not as fast as physical memory).</p>
+
+<p>One way of making more physical memory available to your applications is to be more efficient with the use of the RAM available. We can accomplish this by compressing data stored in memory; specifically we will use <a href="http://en.wikipedia.org/wiki/Zram" title="ZRAM Wikipedia">ZRAM</a> to appropriate a percentage of total RAM as compressed block devices. Data stored in the area will be compressed and will take up less memory than if they weren’t.</p>
+
+<p>Realize though that ZRAM will put a little more load on the CPU since it now has to compress/decompress data in that portion. So if you also reaching or exceeding the CPU limits of your VPS you should do testing to see if ZRAM helps your situation or perhaps consider actually upgrading your VPS.</p>
+
+<p>Note some commands listed below may require superuser priviledges. Either</p>
+
+<ol>
+  <li>use the <code class="language-plaintext highlighter-rouge">su</code> command to change the login session’s owner to root; or</li>
+  <li>prepend the commands with <code class="language-plaintext highlighter-rouge">sudo</code> (e.g. <code class="language-plaintext highlighter-rouge">sudo swapon -s</code>); or</li>
+  <li>login as root directly</li>
+</ol>
+
+<h3 id="checking-kernel-support">Checking Kernel Support:</h3>
+
+<p>In a terminal run this command:<br />
+<code class="language-plaintext highlighter-rouge">modprobe -nv zram</code></p>
+
+<p>If the result is a path to zram.ko then your kernel supports zram as a loadable module.</p>
+
+<h3 id="checking-if-zram-is-already-enabled">Checking if ZRAM is Already Enabled:</h3>
+
+<p>Some distributions come with ZRAM enabled by default (such as Lubuntu). Before continuing onward we should double check to ensure we are not trying to accomplish something that is already done.<br />
+Check to see if the module is loaded:<br />
+<code class="language-plaintext highlighter-rouge">lsmod | grep zram</code></p>
+
+<p>If it is loaded (the result is a line starting with zram) check to see if the compressed block devices are setup and running as available swap devices:<br />
+<code class="language-plaintext highlighter-rouge">swapon -s</code></p>
+
+<p>If you see devices listed such as /dev/zram0, /dev/zram1,… then ZRAM is already running and there is nothing you need to do further.</p>
+
+<h3 id="creating-the-startup-script">Creating the Startup Script:</h3>
+
+<p>If it does not already exist create the file <strong>/etc/init.d/zram</strong> with the following contents:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;pre class="lang:sh decode:true" title="zram"&gt;#!/bin/bash
+### BEGIN INIT INFO
+# Provides: zram
+# Required-Start:
+# Required-Stop:
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Increased Performance In Linux With zRam (Virtual Swap Compressed in RAM)
+# Description: Adapted from systemd scripts at https://github.com/mystilleef/FedoraZram
+# Included as part of antix-goodies package by anticapitalista &lt;antiX@operamail.com&gt;
+# This script was written by tradetaxfree and is found at http://crunchbanglinux.org/forums/topic/15344/zram-a-good-idea/
+# Copy this script (as root) from /usr/local/bin to /etc/init.d and then #update-rc.d zram defaults
+# After booting verify the module is loaded with: lsmod | grep zram
+### END INIT INFO
+
+start() {
+    # get the number of CPUs
+    num_cpus=$(grep -c processor /proc/cpuinfo)
+    # if something goes wrong, assume we have 1
+    [ "$num_cpus" != 0 ] || num_cpus=1
+
+    # set decremented number of CPUs
+    last_cpu=$((num_cpus - 1))
+    
+    #default Factor % = 90 change this value here or create /etc/default/zram
+    FACTOR=25
+    #&amp; put the above single line in /etc/default/zram with the value you want
+	[ -f /etc/default/zram ] &amp;&amp; source /etc/default/zram || true
+	factor=$FACTOR # percentage
+
+    # get the amount of memory in the machine
+    memtotal=$(grep MemTotal /proc/meminfo | awk ' { print $2 } ')
+    mem_by_cpu=$(($memtotal/$num_cpus*$factor/100*1024))
+
+    # load dependency modules
+    # attempt load using syntax for kernels 3.4 onwards falling back to syntax for kernels 3.1 - 3.3
+    if ! modprobe zram num_devices=$num_cpus &amp;&amp; ! modprobe zram zram_num_devices=$num_cpus; then
+      echo -e "Your Kernel needs to be compiled with ZRAM support:" \
+      "\n\nDevice Drivers --&gt; Staging Drivers --&gt; Compressed RAM block device support (M)" \
+      "\nDevice Drivers --&gt; Staging Drivers --&gt; Dynamic compression of swap pages and clean pagecache pages (*)" \
+      "\n\nThe Liquorix Kernel (http://liquorix.net) has ZRAM support built in."
+      exit 1
+    fi
+    echo "zram devices probed successfully"
+    
+    # initialize the devices
+    for i in $(seq 0 $last_cpu); do
+    echo $mem_by_cpu &gt; /sys/block/zram$i/disksize
+    # Creating swap filesystems
+    mkswap /dev/zram$i
+    # Switch the swaps on
+    swapon -p 100 /dev/zram$i
+    done
+}
+
+stop() {
+    # get the number of CPUs
+    num_cpus=$(grep -c processor /proc/cpuinfo)
+
+    # set decremented number of CPUs
+    last_cpu=$((num_cpus - 1))
+
+    # Switching off swap
+    for i in $(seq 0 $last_cpu); do
+    if [ "$(grep /dev/zram$i /proc/swaps)" != "" ]; then
+    swapoff /dev/zram$i
+    sleep 1
+    fi
+    done
+
+    sleep 1
+    rmmod zram
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        sleep 3
+        start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        RETVAL=1
+esac
+exit $RETVAL
+</code></pre></div></div>
+
+<p>The original source of this script can be found here:<br />
+<a href="http://crunchbanglinux.org/forums/topic/15344/zram-a-good-idea/" title="zram init script">http://crunchbanglinux.org/forums/topic/15344/zram-a-good-idea/</a></p>
+
+<p>The creator also notes that the latest version of the script can be found here: <a href="http://dl.dropbox.com/u/96561917/zram.zip" title="Latest Version of zram Script">http://dl.dropbox.com/u/96561917/zram.zip</a></p>
+
+<p>We do make some slight changes to the script.</p>
+
+<p>The if statement for the module loading has been corrected to not exit if it successfully loads using syntax for kernels 3.4 and onward.</p>
+
+<p>Additionally take note of the change we make to FACTOR in the script from the default 90 to 25. We implement this change due to the following comment from one of ZRAM’s developers (back when it was known as Compcache): <a href="https://code.google.com/p/compcache/wiki/CompilingAndUsingNew" title="ZRAM (Compcache) Nitin Gupta Comment">https://code.google.com/p/compcache/wiki/CompilingAndUsingNew</a></p>
+
+<blockquote>
+  <p><span class="author">Comment by project member <a href="https://code.google.com/u/nitingupta910@gmail.com/">nitingupta910@gmail.com</a>, </span> <span class="date" title="Fri May  7 01:35:52 2010">May 7, 2010</span></p>
+
+  <p>@Paczesiowa: ramzswap should not be given so much of memory as its just a (virtual) swap device — it can compress only anonymous (say, process stack, heap etc.) memory. There are also other kinds of caches in the system, say filesystem cache which also require lot of memory. So, to have a good balance among all the different caches, ramzswap should not be given nearly 100% of RAM.</p>
+
+  <p>Appropriate amount of ramzswap memory depends on kind of workload. For typical desktop workloads, I found 25% to work just fine (this is the default).</p>
+</blockquote>
+
+<h3 id="enabling-the-startup-script">Enabling the Startup Script:</h3>
+
+<p>Enable execute permissions on the startup script:<br />
+<code class="language-plaintext highlighter-rouge">chmod +x /etc/init.d/zram</code></p>
+
+<p>Add the startup script to the default run level:<br />
+<code class="language-plaintext highlighter-rouge">update-rc.d zram defaults</code></p>
+
+<h3 id="verify">Verify:</h3>
+
+<p>Now either run the script manually:<br />
+<code class="language-plaintext highlighter-rouge">/etc/init.d/zram start</code><br />
+or reboot (preferred since this will test if the script auto executes on boot).</p>
+
+<p>Verify that the module is loaded:<br />
+<code class="language-plaintext highlighter-rouge">lsmod | grep zram</code></p>
+
+<p>If the result is a line starting with zram then it is loaded.</p>
+
+<p>Verify that the compressed block devices are setup and running as available swap devices:<br />
+<code class="language-plaintext highlighter-rouge">swapon -s</code></p>
+
+<p>If you see devices listed such as /dev/zram0, /dev/zram1,… then the compressed block devices are enabled as swap devices and the setup of ZRAM is complete.</p>
+
+  </div><a class="u-url" href="/increasing-linux-vps-ram-for-free-zram-rcscript/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Code Apex</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Code Apex</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Test Description</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

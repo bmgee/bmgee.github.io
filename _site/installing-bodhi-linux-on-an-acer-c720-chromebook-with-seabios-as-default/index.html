@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Installing Bodhi Linux on an Acer C720 Chromebook with SeaBIOS as default. | Code Apex</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Installing Bodhi Linux on an Acer C720 Chromebook with SeaBIOS as default." />
+<meta name="author" content="Code Apex" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Situation:" />
+<meta property="og:description" content="Situation:" />
+<link rel="canonical" href="http://localhost:4000/installing-bodhi-linux-on-an-acer-c720-chromebook-with-seabios-as-default/" />
+<meta property="og:url" content="http://localhost:4000/installing-bodhi-linux-on-an-acer-c720-chromebook-with-seabios-as-default/" />
+<meta property="og:site_name" content="Code Apex" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2014-12-15T10:59:22-08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Installing Bodhi Linux on an Acer C720 Chromebook with SeaBIOS as default." />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Code Apex"},"dateModified":"2014-12-15T10:59:22-08:00","datePublished":"2014-12-15T10:59:22-08:00","description":"Situation:","headline":"Installing Bodhi Linux on an Acer C720 Chromebook with SeaBIOS as default.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/installing-bodhi-linux-on-an-acer-c720-chromebook-with-seabios-as-default/"},"url":"http://localhost:4000/installing-bodhi-linux-on-an-acer-c720-chromebook-with-seabios-as-default/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Code Apex" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Code Apex</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/affiliate-disclosure.html">Affiliate Disclosure</a><a class="page-link" href="/disclosure-policy.html">Disclosure Policy</a><a class="page-link" href="/medical-disclaimer.html">Medical Disclaimer</a><a class="page-link" href="/privacy-policy.html">Privacy Policy</a><a class="page-link" href="/terms-and-conditions.html">Terms and Conditions</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Installing Bodhi Linux on an Acer C720 Chromebook with SeaBIOS as default.</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2014-12-15T10:59:22-08:00" itemprop="datePublished">Dec 15, 2014
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">Code Apex</span></span></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="situation">Situation:</h2>
+
+<p>We have an Acer C720 Chromebook and want Chrome OS removed and Bodhi Linux installed on it. Additionally we want to have it boot to Linux by default without having to start SeaBIOS manually by pressing <code class="language-plaintext highlighter-rouge">Ctrl + L</code> at the white boot splash screen.</p>
+
+<h2 id="objective">Objective:</h2>
+
+<p>Acer C720 Chromebook with Chrome OS removed and Bodhi Linux installed with SeaBIOS booting by default.</p>
+
+<h2 id="plan--execution">Plan + Execution:</h2>
+
+<h3 id="outline">Outline</h3>
+
+<p>The general installation procedure:</p>
+
+<ol>
+  <li>Enable developer mode to allow access to the superuser shell in Chrome OS.</li>
+  <li>Accessing the superuser shell.</li>
+  <li>Enable legacy boot / SeaBIOS.</li>
+  <li>Set SeaBIOS as default.</li>
+  <li>Prepare the installation media (USB stick).</li>
+  <li>Boot from the installation media and install Bodhi Linux.</li>
+</ol>
+
+<h3 id="enabling-developer-mode"><span class="mw-headline" id="Enabling_Developer_Mode">Enabling Developer Mode</span></h3>
+
+<ol>
+  <li>Turn on the Chromebook.</li>
+  <li>Press and hold the <code class="language-plaintext highlighter-rouge">Esc + F3 (Refresh)</code> keys, then press the <code class="language-plaintext highlighter-rouge">Power</code> button. This enters Recovery Mode.</li>
+  <li>Press <code class="language-plaintext highlighter-rouge">Ctrl + D</code> (no prompt). It will ask you to confirm, then the system will revert its state and enable Developer Mode.</li>
+</ol>
+
+<div> **Note:** Press `Ctrl + D` (or wait 30 seconds for the beep and boot) at the white boot splash screen to enter Chrome OS.</div>
+<h3 id="accessing-the-superuser-shell"><span class="mw-headline" id="Accessing_the_superuser_shell">Accessing the superuser shell</span></h3>
+
+<p>Start a terminal session. There are two ways to start a terminal session in Chrome OS (in dev-mode): VT-2 or crosh. For our purposes here it does not matter which way is used.</p>
+
+<p><span class="collapseomatic " id="id6361a8ca9ce48" tabindex="0" title="Get the command prompt through VT-2">Get the command prompt through VT-2</span></p>
+
+<div class="collapseomatic_content " id="target-id6361a8ca9ce48">&gt; #### Get the command prompt through VT-2
+&gt; 
+&gt; One way to get the login prompt is through something called VT-2, or “virtual terminal 2”. This is probably familiar to the Linux hackers out there. You can get to VT-2 by pressing:
+&gt; 
+&gt; <div>[ Ctrl ] [ Alt ] [ =&gt; ]</div>…where the \[ =&gt; \] key is the right-arrow key just above the number 3 on your keyboard.
+&gt; 
+&gt; Once you have the login prompt, you should see a set of instructions telling you about command-line access. <span style="color: #ff0000;">By default, you can login as the </span>`chronos`<span style="color: #ff0000;"> user with no password. This includes the ability to do password-less sudo.</span> The instructions on the screen will tell you how you can set a password. They also tell you how to disable screen dimming.
+&gt; 
+&gt; <div>The instructions do tell you how to get back to the browser, but because it’s so important, I’ll also put it here. Just press:</div>&gt; <div><div>[ Ctrl ] [ Alt ] [ &lt;= ]</div></div>
+&gt; 
+&gt; <div>…where the [ &lt;= ] key is the left-arrow key just above the number 1 on your keyboard.</div>**SIDE NOTE**: For the technical-minded, you may realize that the top-rows of the keyboard on a Chrome OS device are actually treated by Linux as the keys F1 through F10. Thus, the \[ =&gt; \] key is actually F2 and the \[ &lt;= \] key is actually F1.
+&gt; 
+&gt; **SIDE NOTE**: If you’re fooling around, you might also notice that kernel messages show up on VT-8.
+&gt; 
+&gt; - - - - - -
+
+</div>
+<p><span class="collapseomatic " id="id6361a8ca9ce87" tabindex="0" title="Getting the command prompt through crosh">Getting the command prompt through crosh</span>&lt;div class="collapseomatic_content " id="target-id6361a8ca9ce87"&gt;#### Getting the command prompt through crosh</p>
+
+<div>Because you booted into developer mode, you also have an alternate way to get a terminal prompt. I’ll mention this as well, since the alternate shell is a little nicer (in the very least, it keeps your screen from dimming on you), even if it is a little harder to get to. To use this alternate way:</div>
+<div>1. Go through the standard Chrome OS login screen (you’ll need to setup a network, etc) and get to the web browser. It’s OK if you login as guest.
+2. Press \[ Ctrl \] \[ Alt \] \[ T \] to get the crosh shell.
+3. Use the `shell` command to get the shell prompt. NOTE: even if you set a password for the `chronos` user, you won’t need it here (though you still need it for `sudo` access)
+
+</div>
+<p>Note that entering the shell this way doesn’t give you all the instructions that VT-2 does (like how to set your password). You might want to follow the VT-2 steps once just to get the instructions.</p>
+
+<p>If you want to get back to the browser without killing the shell, you can do it with [ Alt ] [ Tab ].</p>
+
+<p><strong>SIDE NOTE</strong>: You can actually create as many shells as you want. Just hit [ Ctrl ] [ Alt ] [ T ] again and a second shell will be opened. You can [ Alt ] [ Tab ] between them.</p>
+
+<p>&lt;/div&gt;In the terminal open a bash shell with the <code class="language-plaintext highlighter-rouge">shell</code> command. Then become superuser with <code class="language-plaintext highlighter-rouge">sudo bash</code>.</p>
+
+<h3 id="enabling-seabios"><span class="mw-headline" id="Enabling_SeaBIOS">Enabling SeaBIOS</span></h3>
+
+<p>This method will allow you to access the pre-installed version of SeaBIOS through the Developer Mode screen in Coreboot.</p>
+
+<ul>
+  <li>Inside your superuser shell enter:</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">crossystem dev_boot_usb=1 dev_boot_legacy=1</code></p>
+
+<ul>
+  <li>Reboot the machine.</li>
+</ul>
+
+<p>You can now start SeaBIOS by pressing <code class="language-plaintext highlighter-rouge">Ctrl + L</code> at the white boot splash screen.</p>
+
+<h3 id="boot-to-seabios-by-default"><span class="mw-headline" id="Boot_to_SeaBIOS_by_default">Boot to SeaBIOS by default</span></h3>
+
+<p>To boot SeaBIOS by default, you will need to run <a href="https://chromium.googlesource.com/chromiumos/platform/vboot_reference/+/master/scripts/image_signing/set_gbb_flags.sh"><code class="language-plaintext highlighter-rouge">set_gbb_flags.sh</code></a> in Chrome OS (already included in Chrome OS).</p>
+
+<div> **Note:** It is a good idea to do this and have SeaBIOS boot by default even if you do not mind pressing `Ctrl + L` at boot. The reason being is if you do not set the GBB flags then your system might become corrupted on empty battery, Chrome OS will be forced to recover and you will lose your Linux installation on the internal storage.</div>
+<div> **Warning:** If you do not disable the write protection before setting the GBB flags you endanger wiping out the RW-LEGACY part of the firmware (i.e. SeaBIOS) and your system might not boot (should be recoverable with Chrome OS recovery media). Updated versions of [`set_gbb_flags.sh`](https://chromium.googlesource.com/chromiumos/platform/vboot_reference/+/master/scripts/image_signing/set_gbb_flags.sh) won’t let you set the GBB flags without disabling the write protection.</div>
+<ul>
+  <li>
+    <p>Disable the hardware write protection by removing screw 7 here: <a href="http://www.chromium.org/_/rsrc/1381990807648/chromium-os/developer-information-for-chrome-os-devices/acer-c720-chromebook/c720-chromebook-annotated-innards.png">http://www.chromium.org/_/rsrc/1381990807648/chromium-os/developer-information-for-chrome-os-devices/acer-c720-chromebook/c720-chromebook-annotated-innards.png </a>Note: Putting the cover back on with just screw 6 in should be enough to boot and complete the rest of the needed steps before putting the write-protect screw back in.</p>
+  </li>
+  <li>
+    <p>Boot and start a <a href="https://wiki.archlinux.org/index.php/Chromebook#Accessing_the_superuser_shell" title="Chromebook">superuser shell</a> and enter:</p>
+  </li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">sudo su&lt;br&gt;&lt;/br&gt;</code></p>
+
+<ul>
+  <li>Disable the software write protection.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">flashrom --wp-disable&lt;br&gt;&lt;/br&gt;</code></p>
+
+<ul>
+  <li>Check that write protection is disabled.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">flashrom --wp-status&lt;br&gt;&lt;/br&gt;</code></p>
+
+<ul>
+  <li>Run <code class="language-plaintext highlighter-rouge">set_gbb_flags.sh</code> with no parameters.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">set_gbb_flags.sh&lt;br&gt;&lt;/br&gt;</code></p>
+
+<div> **Note:** Recent versions of Chrome OS have moved the script to /usr/share/vboot/bin/set_gbb_flags.sh which isn’t in $PATH by default.</div>
+<ul>
+  <li>Make sure you get the following output.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">GBB_FLAG_DEV_SCREEN_SHORT_DELAY 0x00000001&lt;br&gt;&lt;/br&gt;GBB_FLAG_FORCE_DEV_SWITCH_ON 0x00000008&lt;br&gt;&lt;/br&gt;GBB_FLAG_FORCE_DEV_BOOT_LEGACY 0x00000080&lt;br&gt;&lt;/br&gt;GBB_FLAG_DEFAULT_DEV_BOOT_LEGACY 0x00000400&lt;br&gt;&lt;/br&gt;</code></p>
+
+<ul>
+  <li>Now set SeaBIOS as default.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge"># set_gbb_flags.sh 0x489&lt;br&gt;&lt;/br&gt;</code></p>
+
+<ul>
+  <li>Enable back the software write protection.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">flashrom --wp-enable&lt;br&gt;&lt;/br&gt;</code><br />
+Your Chromebook now will boot to SeaBIOS by default, at this point you should re-enable the hardware write protection by reinserting the write protect screw.</p>
+
+<h3 id="prepare-the-installation-media">Prepare the Installation Media</h3>
+
+<p>Navigate and retrieve the latest Bodhi Linux ISO from here:</p>
+
+<p><a href="http://sourceforge.net/projects/bodhilinux/files/?source=navbar" title="Bodhi Linux ISO">http://sourceforge.net/projects/bodhilinux/files/?source=navbar</a></p>
+
+<p>As of this writing the current one we want is: <a href="http://sourceforge.net/projects/bodhilinux/files/3.0.0-rc1/bodhi-3.0.0-chromebook-rc1.iso/download" title="bodhi-3.0.0-chromebook-rc1.iso">bodhi-3.0.0-chromebook-rc1.iso</a></p>
+
+<p>Assuming we are preparing the installation media in a Linux environment, change to the directory where you have downloaded the ISO image to and run:<br />
+<code class="language-plaintext highlighter-rouge">dd if=bodhi-c720-chromebook-rc1.iso of=/dev/sdX</code><br />
+Where X is replaced with the drive letter of your USB stick. A quick way to find this out is checking the output of the command <code class="language-plaintext highlighter-rouge">dmesg</code> after inserting the usb drive.</p>
+
+<p>If you prefer a GUI tool or are using OSX/Windows to create the flash drive you can find detailed information on this process <a href="https://help.ubuntu.com/community/Installation/FromImgFiles">here</a>.</p>
+
+<h3 id="boot-from-the-installation-media-and-install-bodhi-linux">Boot From the Installation Media and Install Bodhi Linux</h3>
+
+<p>Since we have set SeaBIOS to boot by default we will not need to press <code class="language-plaintext highlighter-rouge">Ctrl + L</code> at the white boot splash screen.</p>
+
+<p>A message will appear to press the <code class="language-plaintext highlighter-rouge">ESC</code> key to select to bring up the boot menu, proceed to do so and select your USB device from the list it provides.</p>
+
+<p>From this point you can follow the <a href="http://wiki.bodhilinux.com/doku.php?id=installation_instructions#iiboot_into_the_live_environment">normal Bodhi install instructions</a>.</p>
+
+<hr />
+
+<h2 id="comments">Comments</h2>
+
+<ol>
+  <li>
+    <p>r3spo says<br />
+January 19, 2015 at 3:10 am</p>
+
+    <p>Thanks for the guide, do you think this is working also on an HP14? (not he pavillion, the newest one).<br />
+ Cheers</p>
+
+    <ul>
+      <li>
+        <p>Code Apex says<br />
+ January 19, 2015 at 6:20 pm</p>
+
+        <p>The HP14 is SeaBIOS as well so I believe it should work though I have not tried it; but do note the location of the write protect screw is different: <a href="http://s290.photobucket.com/user/bond304/media/IMG_5313_zpsacbb2723.jpg.html">HP14 Write Protect Screw</a><br />
+  Also note these directions will not work for really old Chromebooks without SeaBIOS though (such as the Acer C710).<br />
+  Regarding the Bodhi part specifically the creator of Bodhi Linux, Jeff Hoogland, has a blog post about picking up a HP14 <a href="http://jeffhoogland.blogspot.ca/2014/03/buying-chromebooks-for-their-hardware.html">here</a> so I suspect installing Bodhi would work fine.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+
+  </div><a class="u-url" href="/installing-bodhi-linux-on-an-acer-c720-chromebook-with-seabios-as-default/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Code Apex</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Code Apex</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Test Description</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
